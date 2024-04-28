@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 
@@ -10,16 +10,16 @@ function Recipe() {
   const [details, setDetails] = useState({});
   const [activeTab, setActiveTab] = useState('instructions');
 
-  const fetchDetails = async () => {
+  const fetchDetails = useCallback(async () => {
     const data = await fetch(`https://api.spoonacular.com/recipes/${params.name}/information?apiKey=${process.env.REACT_APP_API_KEY}`);
     const detailData = await data.json();
     setDetails(detailData);
     console.log(detailData);
-  }
+  },[params.name])
 
   useEffect(() => {
     fetchDetails();
-  }, [params.name]);
+  }, [fetchDetails, params.name]);
 
   return (
     <DetailWrapper>
